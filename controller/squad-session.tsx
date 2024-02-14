@@ -13,49 +13,51 @@
  *    - Some members might have bad GPS accuracy (Anders), try to use some BLE pings between phones to detect nearby presence?
  */
 
-/**
- * The presence/safety status of a member
- *
- * present: Is within the safe-zone
- * absent: Has left the safe-zone, needs to be found!
- * adventuring: Has asked permission to leave for solo adventures.
- */
-type SquadMemberStatus = "present" | "absent" | "adventuring";
-
-/**
- * Squad member
- */
-type SquadMember = {
+namespace BarSquad {
   /**
-   * Name
+   * The presence/safety status of a member
+   *
+   * present: Is within the safe-zone
+   * absent: Has left the safe-zone, needs to be found!
+   * adventuring: Has asked permission to leave for solo adventures.
    */
-  name: string;
-  /**
-   * Status
-   */
-  status: SquadMemberStatus;
-  /**
-   * Last seen (last location update timestamp)
-   */
-  last_seen: number;
-};
-
-/**
- * Squad session
- */
-type SquadSession = {
-  /**
-   * Squad name
-   */
-  name: string;
+  type SquadMemberStatus = "present" | "absent" | "adventuring";
 
   /**
-   * Members
+   * Squad member
    */
-  members: SquadMember[];
+  type SquadMember = {
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Status
+     */
+    status: SquadMemberStatus;
+    /**
+     * Last seen (last location update timestamp)
+     */
+    last_seen: number;
+  };
 
   /**
-   * Squad code
+   * Squad session
    */
-  code: string;
-};
+  type SquadSession = {
+    /**
+     * Squad name
+     */
+    name: string;
+
+    /**
+     * Members
+     */
+    members: SquadMember[];
+
+    /**
+     * Squad code
+     */
+    code: string;
+  };
+}
