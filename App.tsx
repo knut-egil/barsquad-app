@@ -4,6 +4,12 @@ import { StyleSheet, Text, View } from "react-native";
 import SquadContext from "./contexts/squad-context";
 import { BarSquad } from "./controller/squad-session";
 
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import HomeScreen from "./views/home-screen";
+
+const Stack = createNativeStackNavigator();
+
 export default function App() {
   //#region Squad context
   const [squad, setSquad] = useState<BarSquad.SquadSession>();
@@ -19,23 +25,15 @@ export default function App() {
 
   return (
     <SquadContext.Provider value={{ squad, joinSquad }}>
-      <View style={styles.container}>
-        <Text>Bar Squad</Text>
-        <Text>Current squad: {squad?.name ?? "None"}</Text>
-
-        {/* If no active squad, show join/create squad view */}
-        {squad ? (
-          <>
-            <Text>LEAVE SQUAD</Text>
-          </>
-        ) : (
-          <>
-            <Text>JOIN/CREATE SQUAD</Text>
-          </>
-        )}
-
-        <StatusBar style="auto" />
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name={"Home"}
+            component={HomeScreen}
+            options={{ title: "Bar Squad" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </SquadContext.Provider>
   );
 }
