@@ -77,7 +77,7 @@ export default function SquadSetup() {
   }, [squadName]);
   //#endregion
 
-  async function registerSquad(
+  async function createSquad(
     squadName: string
   ): Promise<BarSquad.SquadSession | undefined> {
     try {
@@ -136,10 +136,13 @@ export default function SquadSetup() {
 
       // Clear out input fields etc.
       setSquadName("");
+
+      // Return squad!
+      return result?.data;
     } catch (err) {
       const { stack, message } = err as Error;
       console.error(
-        `An error occured while registering squad, error: ${
+        `An error occured while creating squad, error: ${
           stack ?? message ?? err
         }`
       );
@@ -161,9 +164,9 @@ export default function SquadSetup() {
     }
 
     // Attempt to register squad to backend
-    const registeredSquad = await registerSquad(squadName);
-    if (!registeredSquad) {
-      console.warn(`Failed registering squad with name "${squadName}".`);
+    const createdSquad = await createSquad(squadName);
+    if (!createdSquad) {
+      console.warn(`Failed creating squad with name "${squadName}".`);
       return;
     }
 
@@ -175,6 +178,114 @@ export default function SquadSetup() {
 
   //#region Join
   const [squadCode, setSquadCode] = useState("");
+  const [isSquadCodeValid, setIsSquadCodeValid] = useState<
+    boolean | undefined
+  >();
+
+  //#region Validate func
+  function validateSquadCode() {
+    if (!squadCode || squadCode.length < 6) return false;
+
+    return true;
+  }
+  useEffect(() => {
+    if (squadCode) setIsSquadCodeValid(validateSquadCode());
+    else setIsSquadCodeValid(false);
+  }, [squadCode]);
+  //#endregion
+
+  async function joinSquad(
+    squadCode: string
+  ): Promise<BarSquad.SquadSession | undefined> {
+    try {
+      // Build payload
+      const payload: JoinPayload = {
+        code: squadCode,
+      };
+
+      /**
+       * Post request to "barsquad.knutegil.dev/api/squad/join"
+       * Body:
+       * { "code": squadName }
+       */
+      const res = await fetch(
+        `https://${config.domain}${config.endpoints.api.squad.join}`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      // Check status code?
+
+      // Get response!
+      const result: APIResponse<JoinResponse> =
+        (await res.json()) as APIResponse<JoinResponse>;
+
+      // Check response
+      if (result.error) {
+        // An error occured...
+        console.warn(
+          `Error while joining squad. Error code: "${result.error?.code}", message: ${result.error?.message}`
+        );
+
+        // Display error..?
+
+        return;
+      }
+
+      // Get squad
+      const squadSession = result?.data as BarSquad.SquadSession;
+
+      // Success! :D
+      console.info(
+        `Successfully joined squad with name "${
+          squadSession.name
+        }"! Result: ${JSON.stringify(result, null, 2)}`
+      );
+
+      // Update our SquadContext with the created squad session, switch to the main squad view!
+      setSquad(result.data);
+
+      // Switch view somehow I guess
+
+      // Clear out input fields etc.
+      setSquadCode("");
+
+      // Return squad!
+      return result?.data;
+    } catch (err) {
+      const { stack, message } = err as Error;
+      console.error(
+        `An error occured while joining squad, error: ${
+          stack ?? message ?? err
+        }`
+      );
+    }
+    return;
+  }
+
+  async function onJoinSquadPress() {
+    // Validate squad code format.
+    if (!isSquadCodeValid) {
+      console.warn(`Squad code "${squadCode}" did not pass validation.`);
+      return;
+    }
+
+    // Attempt to join squad using code
+    const joinedSquad = await joinSquad(squadCode);
+    if (!joinedSquad) {
+      console.warn(`Failed joining squad with code "${squadCode}".`);
+      return;
+    }
+
+    // If success, join user to squad and update squad context
+    console.log(`Attempted to join squad with code: "${squadCode}"!`);
+  }
+
   //#endregion
 
   return (
@@ -207,12 +318,21 @@ export default function SquadSetup() {
           <>
             <View style={styles.joinContainer}>
               <TextInput
-                style={styles.input}
+                style={{
+                  ...styles.squadDetailsInput,
+                  ...(isSquadCodeValid
+                    ? {
+                        borderColor: "#00ff00",
+                      }
+                    : {
+                        borderColor: "#ff0000",
+                      }),
+                }}
                 onChangeText={setSquadCode}
                 value={squadCode}
                 placeholder={"DEADBEEF"}
               />
-              <Button title={"Join Squad"} />
+              <Button title={"Join Squad"} onPress={onJoinSquadPress} />
             </View>
           </>
         )}
