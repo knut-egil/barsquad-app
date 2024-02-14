@@ -1,14 +1,24 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
 
-import { useNavigation } from "@react-navigation/native";
-import SquadSetup from "./squad-setup";
+import { NavigationProp } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-export default function HomeScreen() {
-  const navigation = useNavigation();
-
+type HomeScreenNavigation = NativeStackNavigationProp<any, "Home">;
+export default function HomeScreen({
+  navigation,
+}: {
+  navigation: HomeScreenNavigation;
+}) {
   return (
-    <>
-      <SquadSetup></SquadSetup>
-    </>
+    <View>
+      <Text>Home!</Text>
+      <Button
+        title={"Join Squad"}
+        onPress={() => {
+          navigation.navigate("Join Squad");
+        }}
+      ></Button>
+    </View>
   );
 }

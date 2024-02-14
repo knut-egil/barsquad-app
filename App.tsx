@@ -7,6 +7,7 @@ import { BarSquad } from "./controller/squad-session";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./views/home-screen";
+import SquadSetup from "./views/squad-setup";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,11 @@ export default function App() {
             component={HomeScreen}
             options={{ title: "Bar Squad" }}
           />
+          <Stack.Screen
+            name={"Join Squad"}
+            component={SquadSetup}
+            options={{ title: "Bar Squad" }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SquadContext.Provider>
@@ -41,7 +47,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#000",
     alignItems: "center",
     justifyContent: "center",
   },

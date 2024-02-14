@@ -8,7 +8,7 @@ export default function SquadSetup() {
   const { squad, joinSquad } = useContext<BarSquad.SquadContext>(SquadContext);
 
   return (
-    <View style={styles.container}>
+    <View  style={styles.container}>
       <>
         <TextInput id="squad-code-input"></TextInput>
         <Button title={"Join Squad"}></Button>
