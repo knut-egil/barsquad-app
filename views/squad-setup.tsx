@@ -8,11 +8,54 @@ import {
   TextInput,
   View,
 } from "react-native";
+import config from "../Config";
 import SquadContext from "../contexts/squad-context";
 import { BarSquad } from "../controller/squad-session";
 
+//#region API Typing
+type APIError = {
+  message?: string;
+  code?: string;
+};
+type APIResponse<T> = {
+  success: boolean;
+  error?: APIError;
+  data?: T;
+};
+
+/**
+ * Join squad payload
+ */
+type JoinPayload = {
+  code: string;
+};
+
+/**
+ * Join squad response
+ *
+ * name: Squad name
+ */
+type JoinResponse = BarSquad.SquadSession;
+
+/**
+ * Create squad payload
+ *
+ * name: Desired squad name
+ */
+type CreatePayload = {
+  name: string;
+};
+/**
+ * Create squad response
+ *
+ * name: Squad name
+ * code: Squad join code
+ */
+type CreateResponse = BarSquad.SquadSession;
+//#endregion
+
 export default function SquadSetup() {
-  const { squad, joinSquad } = useContext<BarSquad.SquadContext>(SquadContext);
+  const { squad, setSquad } = useContext<BarSquad.SquadContext>(SquadContext);
 
   //#region Create
   const [isCreating, setIsCreating] = useState(false);
@@ -29,14 +72,70 @@ export default function SquadSetup() {
     return true;
   }
   useEffect(() => {
-    setIsSquadNameValid(validateSquadName());
+    if (squadName) setIsSquadNameValid(validateSquadName());
+    else setIsSquadNameValid(false);
   }, [squadName]);
   //#endregion
 
   async function registerSquad(
     squadName: string
-  ): Promise<BarSquad.SquadSession | void> {
+  ): Promise<BarSquad.SquadSession | undefined> {
     try {
+      // Build payload
+      const payload: CreatePayload = {
+        name: squadName,
+      };
+
+      /**
+       * Post request to "barsquad.knutegil.dev/api/squad/create"
+       * Body:
+       * { "name": squadName }
+       */
+      const res = await fetch(
+        `https://${config.domain}${config.endpoints.api.squad.create}`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      // Check status code?
+
+      // Get response!
+      const result: APIResponse<CreateResponse> =
+        (await res.json()) as APIResponse<CreateResponse>;
+
+      // Check response
+      if (result.error) {
+        // An error occured...
+        console.warn(
+          `Error while creating squad. Error code: "${result.error?.code}", message: ${result.error?.message}`
+        );
+
+        // Display error..?
+
+        return;
+      }
+
+      // Success! :D
+      console.info(
+        `Successfully created squad with name "${squadName}"! Result: ${JSON.stringify(
+          result,
+          null,
+          2
+        )}`
+      );
+
+      // Update our SquadContext with the created squad session, switch to the main squad view!
+      setSquad(result.data);
+
+      // Switch view somehow I guess
+
+      // Clear out input fields etc.
+      setSquadName("");
     } catch (err) {
       const { stack, message } = err as Error;
       console.error(
@@ -45,6 +144,7 @@ export default function SquadSetup() {
         }`
       );
     }
+    return;
   }
 
   async function onCreateSquadPress() {
@@ -112,11 +212,11 @@ export default function SquadSetup() {
                 value={squadCode}
                 placeholder={"DEADBEEF"}
               />
-              <Button title={"Join Squad"}></Button>
+              <Button title={"Join Squad"} />
             </View>
           </>
         )}
-        <Button title={"Create Squad"} onPress={onCreateSquadPress}></Button>
+        <Button title={"Create Squad"} onPress={onCreateSquadPress} />
       </View>
       <StatusBar style="auto" />
     </SafeAreaView>

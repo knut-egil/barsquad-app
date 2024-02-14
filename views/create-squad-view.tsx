@@ -12,7 +12,7 @@ import SquadContext from "../contexts/squad-context";
 import { BarSquad } from "../controller/squad-session";
 
 export default function CreateSquadView() {
-  const { squad, joinSquad } = useContext<BarSquad.SquadContext>(SquadContext);
+  const { squad, setSquad } = useContext<BarSquad.SquadContext>(SquadContext);
 
   const [squadName, setSquadName] = useState("");
 
@@ -24,7 +24,7 @@ export default function CreateSquadView() {
         value={squadName}
         placeholder={"Drunken Bastards"}
       />
-      <Button title={"Create"}></Button>
+      <Button title={"Create"} />
     </SafeAreaView>
   );
 }

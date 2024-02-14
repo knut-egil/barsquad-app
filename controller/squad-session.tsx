@@ -39,6 +39,14 @@ export namespace BarSquad {
      * Last seen (last location update timestamp)
      */
     last_seen: number;
+
+    /**
+     * Location
+     */
+    location?: {
+      lat: string;
+      lng: string;
+    };
   };
 
   /**
@@ -68,9 +76,9 @@ export namespace BarSquad {
     squad?: SquadSession;
 
     /**
-     * Join a squad session
-     * @param code
+     * Set the current squad
+     * @param squad
      */
-    joinSquad(code: string): Promise<boolean>;
+    setSquad(squad?: SquadSession): void;
   };
 }
