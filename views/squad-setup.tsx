@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   SafeAreaView,
   Button,
@@ -16,7 +16,24 @@ export default function SquadSetup() {
 
   //#region Create
   const [isCreating, setIsCreating] = useState(false);
-  function onCreateSquadPress() {
+
+  const [squadName, setSquadName] = useState("");
+  const [isSquadNameValid, setIsSquadNameValid] = useState<
+    boolean | undefined
+  >();
+
+  //#region Validate func
+  function validateSquadName() {
+    if (!squadName || squadName.length < 1) return false;
+
+    return true;
+  }
+  useEffect(() => {
+    setIsSquadNameValid(validateSquadName());
+  }, [squadName]);
+  //#endregion
+
+  async function onCreateSquadPress() {
     // If isCreating == false, set to true
     if (!isCreating) {
       setIsCreating(true);
@@ -24,6 +41,10 @@ export default function SquadSetup() {
     }
 
     // We were already creating a squad, verify name etc.
+    if (!isSquadNameValid) {
+      console.warn(`Squad name "${squadName}" did not pass validation.`);
+      return;
+    }
 
     // Attempt to register squad to backend
 
@@ -31,7 +52,6 @@ export default function SquadSetup() {
     console.log(`Attempted to create squad with name: "${squadName}"!`);
   }
 
-  const [squadName, setSquadName] = useState("");
   //#endregion
 
   //#region Join
@@ -47,7 +67,16 @@ export default function SquadSetup() {
               <View style={styles.squadDetailsInputContainer}>
                 <Text style={styles.squadDetailsInputText}>Name</Text>
                 <TextInput
-                  style={styles.squadDetailsInput}
+                  style={{
+                    ...styles.squadDetailsInput,
+                    ...(isSquadNameValid
+                      ? {
+                          borderColor: "#00ff00",
+                        }
+                      : {
+                          borderColor: "#ff0000",
+                        }),
+                  }}
                   onChangeText={setSquadName}
                   value={squadName}
                   placeholder={"Drunken Bastards"}
