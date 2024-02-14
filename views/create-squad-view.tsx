@@ -35,7 +35,37 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+
+    width: "90%",
+    textAlign: "center",
+
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
   },
+
+  joinContainer: {
+    backgroundColor: "#202040",
+    alignItems: "center",
+    justifyContent: "center",
+
+    padding: 8,
+    width: "100%",
+
+    borderRadius: 8,
+  },
+  createContainer: {
+    backgroundColor: "#181830",
+    alignItems: "center",
+    justifyContent: "center",
+
+    gap: 12,
+    paddingBottom: 12,
+    width: "70%",
+
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+
   container: {
     flex: 1,
     backgroundColor: "#101020",
