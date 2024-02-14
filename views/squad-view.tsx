@@ -6,13 +6,13 @@ import SquadContext from "../contexts/squad-context";
 import { BarSquad } from "../controller/squad-session";
 
 export default function SquadView() {
-  const { squad, joinSquad } = useContext<BarSquad.SquadContext>(SquadContext);
+  const { squad, setSquad } = useContext<BarSquad.SquadContext>(SquadContext);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>{squad?.name ?? "No squad"}</Text>
-      <Text>
-        {squad?.members?.map((member) => member.name).join(", ") ??
+      <Text style={styles.text}>{squad?.name ?? "The Squad"}</Text>
+      <Text style={styles.text}>
+        {squad?.members?.map((member) => member.name).join(", ") ||
           "No members"}
       </Text>
 
@@ -27,5 +27,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#101020",
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  text: {
+    color: "#ffffff",
   },
 });
