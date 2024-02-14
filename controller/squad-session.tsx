@@ -13,7 +13,7 @@
  *    - Some members might have bad GPS accuracy (Anders), try to use some BLE pings between phones to detect nearby presence?
  */
 
-namespace BarSquad {
+export namespace BarSquad {
   /**
    * The presence/safety status of a member
    *
@@ -21,12 +21,12 @@ namespace BarSquad {
    * absent: Has left the safe-zone, needs to be found!
    * adventuring: Has asked permission to leave for solo adventures.
    */
-  type SquadMemberStatus = "present" | "absent" | "adventuring";
+  export type SquadMemberStatus = "present" | "absent" | "adventuring";
 
   /**
    * Squad member
    */
-  type SquadMember = {
+  export type SquadMember = {
     /**
      * Name
      */
@@ -44,7 +44,7 @@ namespace BarSquad {
   /**
    * Squad session
    */
-  type SquadSession = {
+  export type SquadSession = {
     /**
      * Squad name
      */
@@ -59,5 +59,18 @@ namespace BarSquad {
      * Squad code
      */
     code: string;
+  };
+
+  export type SquadContext = {
+    /**
+     * Current squad
+     */
+    squad?: SquadSession;
+
+    /**
+     * Join a squad session
+     * @param code
+     */
+    joinSquad(code: string): Promise<boolean>;
   };
 }
