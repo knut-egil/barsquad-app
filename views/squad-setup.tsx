@@ -33,6 +33,20 @@ export default function SquadSetup() {
   }, [squadName]);
   //#endregion
 
+  async function registerSquad(
+    squadName: string
+  ): Promise<BarSquad.SquadSession | void> {
+    try {
+    } catch (err) {
+      const { stack, message } = err as Error;
+      console.error(
+        `An error occured while registering squad, error: ${
+          stack ?? message ?? err
+        }`
+      );
+    }
+  }
+
   async function onCreateSquadPress() {
     // If isCreating == false, set to true
     if (!isCreating) {
@@ -47,6 +61,11 @@ export default function SquadSetup() {
     }
 
     // Attempt to register squad to backend
+    const registeredSquad = await registerSquad(squadName);
+    if (!registeredSquad) {
+      console.warn(`Failed registering squad with name "${squadName}".`);
+      return;
+    }
 
     // If success, join user to squad and display squad-code
     console.log(`Attempted to create squad with name: "${squadName}"!`);
