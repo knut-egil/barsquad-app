@@ -121,6 +121,17 @@ export default function SquadSetup() {
 
         return;
       }
+      // Ensure data
+      if (!result.data) {
+        console.warn(
+          `No data found in create squad result, result: ${JSON.stringify(
+            result,
+            null,
+            2
+          )}`
+        );
+        return;
+      }
 
       // Success! :D
       console.info(
@@ -135,6 +146,10 @@ export default function SquadSetup() {
       setSquad(result.data);
 
       // Switch view somehow I guess
+
+      // Store squad code!
+      await AsyncStorage.setItem("squad-code", result.data?.code);
+      console.info("Stored squad code in async storage!");
 
       // Clear out input fields etc.
       setSquadName("");
@@ -294,7 +309,7 @@ export default function SquadSetup() {
   // Check if we might have stored squadCode in localstorage to resume!
   useEffect(() => {
     // Look for code in local storage!
-    const _squadCode = AsyncStorage.getItem("squad-code")
+    AsyncStorage.getItem("squad-code")
       .then((_squadCode) => {
         // Check if we found squad code
         if (_squadCode) {
