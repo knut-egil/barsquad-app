@@ -1,7 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { Socket } from "socket.io-client";
 import SquadContext from "./contexts/squad-context";
+import WebsocketContext from "./contexts/websocket-context";
 import { BarSquad } from "./controller/squad-session";
 
 import SquadSetup from "./views/squad-setup";
@@ -29,12 +31,30 @@ export default function App() {
   }, [squad]);
   //#endregion
 
+  //#region Websocket context
+  const [client, setClient] = useState<Socket>();
+
+  useEffect(() => {
+    if (!client) {
+      // No websocket clients
+      console.info("No websocket client active!");
+    } else {
+      // Websocket client found!
+      console.info("Websocket client active! Start syncing data...");
+    }
+  }, [client]);
+  //#endregion
+
   return (
     <>
       <SquadContext.Provider value={{ squad: squad, setSquad: setSquad }}>
-        {squad ? <SquadView /> : <SquadSetup />}
+        <WebsocketContext.Provider
+          value={{ client: client, setClient: setClient }}
+        >
+          {squad ? <SquadView /> : <SquadSetup />}
+          <StatusBar style={"auto"} />
+        </WebsocketContext.Provider>
       </SquadContext.Provider>
-      <StatusBar style={"auto"} />
     </>
   );
 }
