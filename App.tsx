@@ -21,14 +21,18 @@ export default function App() {
     if (!squad) {
       // Check if squad is null, then make sure no websocket connection is open
       // Disconnect...
-      console.info(
-        "No squad active! Close any existing websocket connections..."
-      );
+      console.info("No squad active!");
 
       // If socket client...
       if (client) {
+        // Log
+        console.info("Closing websocket connection...");
+
         // Disconnect!
         client.disconnect();
+
+        // Unset client
+        setClient(undefined);
       }
     } else {
       // if squad is NOT null, make sure to establish websocket connection to respective squad room!
@@ -58,7 +62,6 @@ export default function App() {
   useEffect(() => {
     if (!client) {
       // No websocket clients
-      console.info("Websocket client disconnected!");
     } else {
       // Websocket client socket created!
       // Ensure squad!
