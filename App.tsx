@@ -74,7 +74,7 @@ export default function App() {
       }
 
       // Wait for connection
-      client.once("connection", () => {
+      client.once("connect", () => {
         // Log
         console.info("Websocket client connected! Start syncing data...");
       });
