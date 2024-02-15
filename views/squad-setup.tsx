@@ -370,29 +370,28 @@ export default function SquadSetup() {
         {isCreating ? (
           <>
             <View style={styles.squadDetailsContainer}>
-              <View style={styles.squadDetailsInputContainer}>
-                <Text style={styles.squadDetailsInputText}>Name</Text>
-                <TextInput
-                  style={{
-                    ...styles.squadDetailsInput,
-                    ...(isSquadNameValid
-                      ? {
-                          borderColor: "#00ff00",
-                        }
-                      : {
-                          borderColor: "#ff0000",
-                        }),
-                  }}
-                  onChangeText={setSquadName}
-                  value={squadName}
-                  placeholder={"Drunken Bastards"}
-                />
-              </View>
+              <Text style={styles.squadDetailsInputText}>Name</Text>
+              <TextInput
+                style={{
+                  ...styles.squadDetailsInput,
+                  ...(isSquadNameValid
+                    ? {
+                        borderColor: "#00ff00",
+                      }
+                    : {
+                        borderColor: "#ff0000",
+                      }),
+                }}
+                onChangeText={setSquadName}
+                value={squadName}
+                placeholder={"Drunken Bastards"}
+              />
             </View>
           </>
         ) : (
           <>
             <View style={styles.joinContainer}>
+              <Text style={styles.squadDetailsInputText}>Code</Text>
               <TextInput
                 style={{
                   ...styles.squadDetailsInput,
@@ -438,8 +437,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
 
-    paddingTop: 16,
-    padding: 8,
+    paddingVertical: 8,
     width: "100%",
 
     borderRadius: 8,
@@ -447,6 +445,8 @@ const styles = StyleSheet.create({
   squadDetailsInputContainer: {
     display: "flex",
     flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
 
     width: "100%",
   },
@@ -456,7 +456,8 @@ const styles = StyleSheet.create({
   },
   squadDetailsInput: {
     height: 40,
-    margin: 12,
+    marginHorizontal: 12,
+    marginVertical: 6,
     borderWidth: 1,
     padding: 10,
 
@@ -471,7 +472,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
 
-    padding: 8,
+    paddingVertical: 8,
     width: "100%",
 
     borderRadius: 8,
