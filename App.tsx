@@ -171,6 +171,8 @@ export default function App() {
         setUsername(username);
         // If set, assume confirmed!
         setHasConfirmedUsername(true);
+
+        console.info(`Found stored username: "${username}"`);
       })
       .catch((err) => {
         // Failed tol oad..
