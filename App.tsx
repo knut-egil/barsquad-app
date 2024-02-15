@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { io, Socket } from "socket.io-client";
 import config from "./Config";
 import SquadContext from "./contexts/squad-context";
@@ -16,6 +16,7 @@ import RequestBackgroundLocation, {
 } from "./request-location";
 
 import SquadController from "./controller/squad.controller";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 //#region Periodic update of
 
 export default function App() {
@@ -145,11 +146,56 @@ export default function App() {
       );
     });
 
+  const [hasConfirmedUsername, setHasConfirmedUsername] =
+    useState<boolean>(false);
+  const [username, setUsername] = useState<string>();
+
+  const storeUsername = () => {
+    if (!username) return;
+
+    // Store!
+    AsyncStorage.setItem("username", username);
+
+    // Set confirmed
+    setHasConfirmedUsername(true);
+  };
+
+  useEffect(() => {
+    // Load username from async storage
+    AsyncStorage.getItem("username")
+      .then((username) => {
+        // Ensure username is not null
+        if (!username) return;
+
+        // Set username
+        setUsername(username);
+        // If set, assume confirmed!
+        setHasConfirmedUsername(true);
+      })
+      .catch((err) => {
+        // Failed tol oad..
+        setUsername(undefined);
+        setHasConfirmedUsername(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (username) SquadController.setUsername(username);
+  }, [username]);
+
   return (
     <>
       {!hasBgLocationPermissions ? (
         <View style={styles.container}>
           <RequestBackgroundLocation onPressed={setHasBgLocationPermissions} />
+        </View>
+      ) : !(username && hasConfirmedUsername) ? (
+        <View style={styles.container}>
+          <View style={styles.nameInputContainer}>
+            <Text style={styles.nameInputText}>Name</Text>
+            <TextInput style={styles.nameInput} onChangeText={setUsername} />
+            <Button title={"Confirm"} onPress={storeUsername} />
+          </View>
         </View>
       ) : (
         <SquadContext.Provider value={{ squad: squad, setSquad: setSquad }}>
@@ -168,11 +214,36 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#101020",
     alignItems: "center",
     justifyContent: "center",
   },
   paragraph: {
     color: "#ffffff",
+  },
+
+  nameInputContainer: {
+    backgroundColor: "#181830",
+
+    paddingVertical: 12,
+    width: "80%",
+
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+  nameInputText: {
+    marginLeft: 12,
+    color: "#ffffff",
+  },
+  nameInput: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+
+    width: "90%",
+
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
   },
 });
