@@ -148,8 +148,13 @@ export default function SquadSetup() {
       // Switch view somehow I guess
 
       // Store squad code!
-      await AsyncStorage.setItem("squad-code", result.data?.code);
-      console.info("Stored squad code in async storage!");
+      AsyncStorage.setItem("squad-code", result.data?.code)
+        .then(() => {
+          console.info("Stored squad code in async storage!");
+        })
+        .catch((err) => {
+          console.info("Failed storing squad code in async storage.");
+        });
 
       // Clear out input fields etc.
       setSquadName("");
@@ -269,9 +274,14 @@ export default function SquadSetup() {
 
       // Switch view somehow I guess
 
-      // Store squad code in local storage for later resuming!
-      await AsyncStorage.setItem("squad-code", squadCode);
-      console.info("Stored squad code in async storage!");
+      // Store squad code!
+      AsyncStorage.setItem("squad-code", squadCode)
+        .then(() => {
+          console.info("Stored squad code in async storage!");
+        })
+        .catch((err) => {
+          console.info("Failed storing squad code in async storage.");
+        });
       // Clear out input fields etc.
       setSquadCode("");
 
