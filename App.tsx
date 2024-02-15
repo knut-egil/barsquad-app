@@ -11,7 +11,9 @@ import SquadSetup from "./views/squad-setup";
 import SquadView from "./views/squad-view";
 
 import * as Location from "expo-location";
-import RequestBackgroundLocation from "./request-location";
+import RequestBackgroundLocation, {
+  hasBackgroundLocationPermissions,
+} from "./request-location";
 
 import SquadController from "./controller/squad.controller";
 //#region Periodic update of
@@ -127,13 +129,27 @@ export default function App() {
   }, [client, squad]);
   //#endregion
 
+  const [hasBgLocationPermissions, setHasBgLocationPermissions] =
+    useState<boolean>(true);
+
+  hasBackgroundLocationPermissions()
+    .then((hasPermission) => {
+      setHasBgLocationPermissions(hasPermission);
+    })
+    .catch((err) => {
+      const { stack, message } = err as Error;
+      console.error(
+        `Error while checking if has background location permissions! Error: ${
+          stack ?? message
+        }`
+      );
+    });
+
   return (
     <>
-      
-      {!text ? (
+      {!hasBgLocationPermissions ? (
         <View style={styles.container}>
-          <RequestBackgroundLocation />
-          <Text style={styles.paragraph}>{text}</Text>
+          <RequestBackgroundLocation onPressed={setHasBgLocationPermissions} />
         </View>
       ) : (
         <SquadContext.Provider value={{ squad: squad, setSquad: setSquad }}>

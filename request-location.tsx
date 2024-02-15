@@ -6,26 +6,45 @@ import SquadController from "./controller/squad.controller";
 
 const LOCATION_TASK_NAME = "background-location-task";
 
-const requestPermissions = async () => {
+export const hasBackgroundLocationPermissions = async () => {
   const { status: foregroundStatus } =
     await Location.requestForegroundPermissionsAsync();
   if (foregroundStatus === "granted") {
     const { status: backgroundStatus } =
       await Location.requestBackgroundPermissionsAsync();
-    if (backgroundStatus === "granted") {
-      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-        accuracy: Location.Accuracy.Balanced,
-        timeInterval: 1000 * 15, // Update every 15s
-        distanceInterval: 0,
 
-      });
+    if (backgroundStatus === "granted") {
+      return true;
     }
   }
+
+  return false;
 };
 
-const PermissionsButton = () => (
+const requestPermissions = async (cb: (result: boolean) => void) => {
+  const result = await hasBackgroundLocationPermissions();
+  if (result)
+    await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+      accuracy: Location.Accuracy.Balanced,
+      timeInterval: 1000 * 15, // Update every 15s
+      distanceInterval: 0,
+    });
+
+  cb(result);
+};
+
+const PermissionsButton = ({
+  onPressed,
+}: {
+  onPressed(result: boolean): void;
+}) => (
   <View style={styles.container}>
-    <Button onPress={requestPermissions} title="Enable background location" />
+    <Button
+      onPress={() => {
+        requestPermissions(onPressed);
+      }}
+      title="Enable background location"
+    />
   </View>
 );
 
@@ -57,10 +76,8 @@ TaskManager.defineTask<{ locations: [Location.LocationObject] }>(
         const squadCode = SquadController.getSquadCode();
         const username = SquadController.getUsername();
 
-        if (!squadCode )
-          return;
-        if(!username) 
-          return;
+        if (!squadCode) return;
+        if (!username) return;
 
         const payload = {
           locations: locations,
@@ -79,7 +96,7 @@ TaskManager.defineTask<{ locations: [Location.LocationObject] }>(
         );
 
         // Get result
-        const result = {success:true};//await res.json();
+        const result = { success: true }; //await res.json();
 
         // Do something with result?
         console.info(
