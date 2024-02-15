@@ -52,6 +52,19 @@ const config = {
             return `${config.endpoints.api.squad}/create`;
           },
         },
+
+        /**
+         * /api/squad/:code
+         */
+        code: {
+          get(code: string) {
+            return `${config.endpoints.api.squad}/${code}`;
+          },
+
+          location(code: string) {
+            return `${config.endpoints.api.squad.code.get(code)}/location`;
+          },
+        },
       },
     },
   },

@@ -3,6 +3,7 @@ import { Button, View, StyleSheet } from "react-native";
 import * as TaskManager from "expo-task-manager";
 import * as Location from "expo-location";
 import SquadController from "./controller/squad.controller";
+import config from "./Config";
 
 const LOCATION_TASK_NAME = "background-location-task";
 
@@ -87,12 +88,15 @@ TaskManager.defineTask<{ locations: [Location.LocationObject] }>(
         if (!username) return;
 
         const payload = {
+          username: username,
           locations: locations,
         };
 
         // Make request
         const res = await fetch(
-          `https://webhook.site/5adf2c2a-78d3-450b-b92d-196de997d27d/${squadCode}/${username}/location`,
+          `https://${config.domain}${config.endpoints.api.squad.code.location(
+            squadCode
+          )}`,
           {
             method: "post",
             headers: {
