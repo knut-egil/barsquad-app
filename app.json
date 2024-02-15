@@ -25,7 +25,8 @@
         "NSLocationWhenInUseUsageDescription": "Share your location with your squad!",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Share your location with your squad!",
         "NSLocationAlwaysUsageDescription": "Share your location with your squad!"
-      }
+      },
+      "bundleIdentifier":"dev.knutegil.barsquad"
     },
     "android": {
       "adaptiveIcon": {
