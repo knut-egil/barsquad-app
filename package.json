@@ -22,7 +22,8 @@
     "socket.io-client": "^4.7.4",
     "expo-location": "~16.5.3",
     "expo-task-manager": "~11.7.2",
-    "expo-system-ui": "~2.9.3"
+    "expo-system-ui": "~2.9.3",
+    "expo-background-fetch": "~11.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

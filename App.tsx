@@ -13,6 +13,9 @@ import SquadView from "./views/squad-view";
 import * as Location from "expo-location";
 import RequestBackgroundLocation from "./request-location";
 
+import SquadController from "./controller/squad.controller";
+//#region Periodic update of
+
 export default function App() {
   //#region Location
   const [location, setLocation] = useState<Location.LocationObject | null>(
@@ -82,6 +85,10 @@ export default function App() {
 
       // Set client
       setClient(_client);
+
+      // Update squad controller data
+      SquadController.setSquadCode(squad.code);
+      SquadController.setUsername("knutegil");
     }
   }, [squad]);
   //#endregion
