@@ -252,6 +252,9 @@ export default function SquadSetup() {
 
       // Switch view somehow I guess
 
+      // Store squad code in local storage for later resuming!
+      localStorage.setItem("squad-code", squadCode);
+      console.info("Stored squad code in local storage!");
       // Clear out input fields etc.
       setSquadCode("");
 
@@ -285,6 +288,43 @@ export default function SquadSetup() {
     // If success, join user to squad and update squad context
     console.log(`Attempted to join squad with code: "${squadCode}"!`);
   }
+
+  // Check if we might have stored squadCode in localstorage to resume!
+  useEffect(() => {
+    // Look for code in local storage!
+    const _squadCode = localStorage.getItem("squad-code");
+
+    // Check if we found squad code
+    if (_squadCode) {
+      // Found squad code!
+      console.info(
+        `Found squad code "${_squadCode}" in local storage, attempting to resume!`
+      );
+
+      // Set squad code
+      //setSquadCode(_squadCode);
+
+      // Attempt to join squad using code
+      joinSquad(_squadCode)
+        .then((joinedSquad) => {
+          if (!joinedSquad) {
+            console.warn(`Failed joining squad with code "${_squadCode}".`);
+            return;
+          }
+
+          // Log restore success
+          console.info("Resumed squad session from local storage!");
+        })
+        .catch((err) => {
+          const { stack, message } = err as Error;
+          console.warn(
+            `An error occured while attempting to restore squad session! Error: ${
+              stack ?? message
+            }`
+          );
+        });
+    }
+  }, []);
 
   //#endregion
 
