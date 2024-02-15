@@ -11,6 +11,7 @@ import SquadSetup from "./views/squad-setup";
 import SquadView from "./views/squad-view";
 
 import * as Location from "expo-location";
+import RequestBackgroundLocation from "./request-location";
 
 export default function App() {
   //#region Location
@@ -36,7 +37,7 @@ export default function App() {
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
-    text = JSON.stringify(location);
+    text = JSON.stringify(location, null, 2);
   }
   //#endregion
 
@@ -121,9 +122,10 @@ export default function App() {
 
   return (
     <>
+      <RequestBackgroundLocation />
       {text ? (
-        <View>
-          <Text>{text}</Text>
+        <View style={styles.container}>
+          <Text style={styles.paragraph}>{text}</Text>
         </View>
       ) : (
         <SquadContext.Provider value={{ squad: squad, setSquad: setSquad }}>
@@ -145,5 +147,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     alignItems: "center",
     justifyContent: "center",
+  },
+  paragraph: {
+    color: "#ffffff",
   },
 });

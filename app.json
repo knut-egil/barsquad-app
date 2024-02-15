@@ -16,14 +16,18 @@
       "supportsTablet": false,
 
       "infoPlist": {
-        "UIBackgroundModes": ["location", "fetch", "remote-notification"]
+        "UIBackgroundModes": ["location", "fetch", "remote-notification"],
+        "NSLocationWhenInUseUsageDescription": "Share your location with your squad!",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Share your location with your squad!",
+        "NSLocationAlwaysUsageDescription": "Share your location with your squad!"
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/bar-squad-nobg.png",
         "backgroundColor": "#000000"
-      }
+      },
+      "permissions": ["ACCESS_BACKGROUND_LOCATION"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
