@@ -10,7 +10,36 @@ import { BarSquad } from "./controller/squad-session";
 import SquadSetup from "./views/squad-setup";
 import SquadView from "./views/squad-view";
 
+import * as Location from "expo-location";
+
 export default function App() {
+  //#region Location
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null
+  );
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  let text = "Waiting..";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+  //#endregion
+
   //#region Squad context
   const [squad, setSquad] = useState<BarSquad.SquadSession>();
 
@@ -92,14 +121,20 @@ export default function App() {
 
   return (
     <>
-      <SquadContext.Provider value={{ squad: squad, setSquad: setSquad }}>
-        <WebsocketContext.Provider
-          value={{ client: client, setClient: setClient }}
-        >
-          {squad ? <SquadView /> : <SquadSetup />}
-          <StatusBar style={"auto"} />
-        </WebsocketContext.Provider>
-      </SquadContext.Provider>
+      {text ? (
+        <View>
+          <Text>{text}</Text>
+        </View>
+      ) : (
+        <SquadContext.Provider value={{ squad: squad, setSquad: setSquad }}>
+          <WebsocketContext.Provider
+            value={{ client: client, setClient: setClient }}
+          >
+            {squad ? <SquadView /> : <SquadSetup />}
+            <StatusBar style={"auto"} />
+          </WebsocketContext.Provider>
+        </SquadContext.Provider>
+      )}
     </>
   );
 }
