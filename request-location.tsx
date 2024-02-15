@@ -14,6 +14,13 @@ export const hasBackgroundLocationPermissions = async () => {
       await Location.requestBackgroundPermissionsAsync();
 
     if (backgroundStatus === "granted") {
+      // Start task!!
+      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+        accuracy: Location.Accuracy.Balanced,
+        timeInterval: 1000 * 15, // Update every 15s
+        distanceInterval: 0,
+      });
+
       return true;
     }
   }
