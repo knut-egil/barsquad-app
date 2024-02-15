@@ -2,6 +2,25 @@ const config = {
   domain: "barsquad.knutegil.dev",
   endpoints: {
     /**
+     * Websocket
+     */
+    websocket: {
+      toString() {
+        return "/ws";
+      },
+
+      squad: {
+        toString() {
+          return `${config.endpoints.websocket}/squad`;
+        },
+
+        code(code: string) {
+          return `${config.endpoints.websocket.squad}/${code}`;
+        },
+      },
+    },
+
+    /**
      * /api
      */
     api: {

@@ -1,7 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Socket } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
+import config from "./Config";
 import SquadContext from "./contexts/squad-context";
 import WebsocketContext from "./contexts/websocket-context";
 import { BarSquad } from "./controller/squad-session";
@@ -23,10 +24,30 @@ export default function App() {
       console.info(
         "No squad active! Close any existing websocket connections..."
       );
+
+      // If socket client...
+      if (client) {
+        // Disconnect!
+        client.disconnect();
+      }
     } else {
       // if squad is NOT null, make sure to establish websocket connection to respective squad room!
       // Connect...
       console.info("Active squad! Create websocket connection...");
+
+      // Create new client & connect!
+      const _client = io(
+        `wss://${config.domain}${config.endpoints.websocket.squad.code(
+          squad.code
+        )}`,
+        {
+          reconnection: true,
+          reconnectionDelayMax: 10_000, // Max 10s retry
+        }
+      );
+
+      // Set client
+      setClient(_client);
     }
   }, [squad]);
   //#endregion
@@ -37,12 +58,33 @@ export default function App() {
   useEffect(() => {
     if (!client) {
       // No websocket clients
-      console.info("No websocket client active!");
+      console.info("Websocket client disconnected!");
     } else {
-      // Websocket client found!
-      console.info("Websocket client active! Start syncing data...");
+      // Websocket client socket created!
+      // Ensure squad!
+      if (!squad) {
+        // Clear client & return
+        setClient(undefined);
+
+        // Log
+        console.info("Unset websocket client, squad not found.");
+
+        // Return
+        return;
+      }
+
+      // Wait for connection
+      client.once("connection", () => {
+        // Log
+        console.info("Websocket client connected! Start syncing data...");
+      });
+
+      // Log waiting for connection
+      console.info(
+        `Waiting for websocket client to establish connection to squad room with code "${squad?.code}".`
+      );
     }
-  }, [client]);
+  }, [client, squad]);
   //#endregion
 
   return (
