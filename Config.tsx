@@ -6,7 +6,7 @@ const config = {
      */
     websocket: {
       toString() {
-        return "/socket.io";
+        return "";
       },
 
       squad: {
