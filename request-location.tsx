@@ -2,7 +2,6 @@ import React from "react";
 import { Button, View, StyleSheet } from "react-native";
 import * as TaskManager from "expo-task-manager";
 import * as Location from "expo-location";
-import { LocationCallback } from "expo-location";
 import SquadController from "./controller/squad.controller";
 
 const LOCATION_TASK_NAME = "background-location-task";
@@ -16,6 +15,9 @@ const requestPermissions = async () => {
     if (backgroundStatus === "granted") {
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
         accuracy: Location.Accuracy.Balanced,
+        timeInterval: 1000 * 15, // Update every 15s
+        distanceInterval: 0,
+
       });
     }
   }
@@ -55,6 +57,11 @@ TaskManager.defineTask<{ locations: [Location.LocationObject] }>(
         const squadCode = SquadController.getSquadCode();
         const username = SquadController.getUsername();
 
+        if (!squadCode )
+          return;
+        if(!username) 
+          return;
+
         const payload = {
           locations: locations,
         };
@@ -72,13 +79,14 @@ TaskManager.defineTask<{ locations: [Location.LocationObject] }>(
         );
 
         // Get result
-        const result = await res.json();
+        const result = {success:true};//await res.json();
 
         // Do something with result?
         console.info(
           `Location update to API result: ${JSON.stringify(result, null, 2)}`
         );
-      } catch (err) {
+      } catch (_err) {
+        const err = _err as Error;
         console.error(
           `Failed sending request! Error: ${err?.stack ?? err?.message}`
         );

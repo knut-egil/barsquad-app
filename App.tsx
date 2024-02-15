@@ -129,9 +129,10 @@ export default function App() {
 
   return (
     <>
-      <RequestBackgroundLocation />
-      {text ? (
+      
+      {!text ? (
         <View style={styles.container}>
+          <RequestBackgroundLocation />
           <Text style={styles.paragraph}>{text}</Text>
         </View>
       ) : (
