@@ -19,7 +19,14 @@ export const hasBackgroundLocationPermissions = async () => {
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
         accuracy: Location.Accuracy.Balanced,
         timeInterval: 1000 * 15, // Update every 15s
-        distanceInterval: 0,
+        distanceInterval: 1,
+        foregroundService: {
+          notificationTitle: "Bar Squad",
+          notificationBody: "Bar Squad is on.",
+        },
+        deferredUpdatesInterval: 1000 * 15, // 15s
+        pausesUpdatesAutomatically: false,
+        showsBackgroundLocationIndicator: true,
       });
 
       return true;
@@ -107,15 +114,6 @@ if (!TaskManager.isTaskDefined(LOCATION_TASK_NAME))
               body: JSON.stringify(payload),
             }
           );
-
-          // If 500 status, no squad exist! stop task.
-          /*if (res.status === 500) {
-          await TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME);
-          console.info(
-            "Unregistered location update task for no valid squad id!!!"
-          );
-          throw new Error("Squad not found with that id.");
-        }*/
 
           // Get result
           const result = await res.json();
