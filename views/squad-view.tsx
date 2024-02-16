@@ -40,7 +40,7 @@ export default function SquadView() {
         },
       },
       {
-        name: "Knut Egil",
+        name: "knutegil",
         location: {
           lat: 62.83958471907604,
           lng: 7.236805824968001,
