@@ -13,6 +13,7 @@ import SquadContext from "../contexts/squad-context";
 import { BarSquad } from "../controller/squad-session";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import squadController from "../controller/squad.controller";
 
 //#region API Typing
 type APIError = {
@@ -30,6 +31,7 @@ type APIResponse<T> = {
  */
 type JoinPayload = {
   code: string;
+  username: string;
 };
 
 /**
@@ -143,7 +145,7 @@ export default function SquadSetup() {
       );
 
       // Update our SquadContext with the created squad session, switch to the main squad view!
-      setSquad(result.data);
+      //setSquad(result.data);
 
       // Switch view somehow I guess
 
@@ -158,6 +160,9 @@ export default function SquadSetup() {
 
       // Clear out input fields etc.
       setSquadName("");
+
+      // Join the squad!
+      await joinSquad(result.data?.code);
 
       // Return squad!
       return result?.data;
@@ -223,6 +228,7 @@ export default function SquadSetup() {
       // Build payload
       const payload: JoinPayload = {
         code: squadCode,
+        username: squadController.getUsername(),
       };
 
       /**
