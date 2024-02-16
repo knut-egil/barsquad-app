@@ -31,13 +31,14 @@ export const hasBackgroundLocationPermissions = async () => {
 
 const requestPermissions = async (cb: (result: boolean) => void) => {
   const result = await hasBackgroundLocationPermissions();
-  if (result)
-    await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+  if (result) {
+    // Do not oduble register
+    /*await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
       accuracy: Location.Accuracy.Balanced,
       timeInterval: 1000 * 15, // Update every 15s
       distanceInterval: 0,
-    });
-
+    });*/
+  }
   cb(result);
 };
 
