@@ -76,7 +76,7 @@ export default function App() {
       console.info("Active squad! Create websocket connection...");
 
       // Create new client & connect!
-      const _client = io(
+      /*const _client = io(
         `wss://${config.domain}${config.endpoints.websocket.squad.code(
           squad.code
         )}`,
@@ -87,11 +87,11 @@ export default function App() {
       );
 
       // Set client
-      setClient(_client);
+      setClient(_client);*/
 
       // Update squad controller data
       SquadController.setSquadCode(squad.code);
-      SquadController.setUsername("knutegil");
+      //SquadController.setUsername();
     }
   }, [squad]);
   //#endregion
@@ -99,7 +99,7 @@ export default function App() {
   //#region Websocket context
   const [client, setClient] = useState<Socket>();
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (!client) {
       // No websocket clients
     } else {
@@ -127,7 +127,7 @@ export default function App() {
         `Waiting for websocket client to establish connection to squad room with code "${squad?.code}".`
       );
     }
-  }, [client, squad]);
+  }, [client, squad]);*/
   //#endregion
 
   const [hasBgLocationPermissions, setHasBgLocationPermissions] =
