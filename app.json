@@ -5,23 +5,20 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/bar-squad-nobg.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": false,
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyCA0POA8_UaV1ASZBNeGcn1P64L3fKHs1Q"
+      },
       "infoPlist": {
-        "UIBackgroundModes": [
-          "location",
-          "fetch",
-          "remote-notification"
-        ],
+        "UIBackgroundModes": ["location", "fetch", "remote-notification"],
         "NSLocationWhenInUseUsageDescription": "Share your location with your squad!",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Share your location with your squad!",
         "NSLocationAlwaysUsageDescription": "Share your location with your squad!"
@@ -32,6 +29,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/bar-squad-nobg.png",
         "backgroundColor": "#000000"
+      },
+      "config": {
+        "googleMaps": { "apiKey": "AIzaSyCA0POA8_UaV1ASZBNeGcn1P64L3fKHs1Q" }
       },
       "permissions": [
         "ACCESS_BACKGROUND_LOCATION",
