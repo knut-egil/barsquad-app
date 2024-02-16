@@ -132,7 +132,16 @@ export default function SquadView() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.squadInfo}>
-        <Text style={styles.text}>{squad?.name ?? "The Squad"}</Text>
+        <Text
+          style={{
+            ...styles.text,
+            fontSize: 18,
+            fontWeight: "bold",
+            marginBottom: 8,
+          }}
+        >
+          {squad?.name ?? "The Squad"}
+        </Text>
         <View style={styles.members}>
           {squad?.members?.map((member, idx) => (
             <Text style={styles.text} key={member.name}>
