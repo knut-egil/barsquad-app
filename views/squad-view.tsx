@@ -188,7 +188,7 @@ export default function SquadView() {
             marginBottom: 8,
           }}
         >
-          {squad?.name ?? "The Squad"}
+          {squad?.name ?? "The Squad"} #{squad?.code}
         </Text>
         <View style={styles.members}>
           {squad?.members?.map((member, idx) => (
