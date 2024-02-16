@@ -107,13 +107,13 @@ TaskManager.defineTask<{ locations: [Location.LocationObject] }>(
         );
 
         // If 500 status, no squad exist! stop task.
-        if (res.status === 500) {
+        /*if (res.status === 500) {
           await TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME);
           console.info(
             "Unregistered location update task for no valid squad id!!!"
           );
           throw new Error("Squad not found with that id.");
-        }
+        }*/
 
         // Get result
         const result = await res.json();
